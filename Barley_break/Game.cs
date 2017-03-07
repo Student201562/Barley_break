@@ -35,7 +35,6 @@ namespace Barley_break
                 }
             }
         }
-
         private void CalculationSizeOfPlayField()
         {
             int size = (int) Math.Sqrt(numbers.Length);
@@ -50,6 +49,15 @@ namespace Barley_break
                     for (int j = 0; j < gameField.GetLength(1); j++)
                     {
                         gameField[i, j] = numbers[count];
+                        if (gameField[i, j] >= 0)
+                        {
+                            
+                        }
+                        else
+                        {
+                            throw new Exception("Есть отрицательные значения, поменяйте их");
+                        }
+                        gameField[i, j] = numbers[count];
                         count++;
                     }
                 }
@@ -60,9 +68,12 @@ namespace Barley_break
             }
             //========================================
         }
-
         public void GenerationNumbersOnField(Random gen)
         {
+            //int temp = gameField[3, 3];
+            //gameField[3, 3] = gameField[3, 2];
+            //gameField[3, 2] = temp;
+
             int index = 0;
             int helpIndex = 0;
             //========================
@@ -82,22 +93,23 @@ namespace Barley_break
                     numbers[index] = Int32.MaxValue;
                 }
             }
-            // Print();
+            Print();
             //========================
         }
-
         public void Print()
         {
-            for (int i = 0; i < gameField.GetLength(0); i++)
+            Console.CursorTop = 3;
+
+             for (int i = 0; i < gameField.GetLength(0); i++)
             {
+                Console.Write("\t\t\t");
                 for (int j = 0; j < gameField.GetLength(1); j++)
-                {
+                { 
                     Console.Write(gameField[i, j] + "\t");
                 }
                 Console.WriteLine();
             }
         }
-
         public void GetLocation(int moveValue)
         {
             moveValueX = 0;
@@ -117,7 +129,6 @@ namespace Barley_break
             }
             //=========================================
         }
-
         public void Shift(int valueWhichEnterUser)
         {
             int coordinateZeroX = 0;
@@ -153,44 +164,47 @@ namespace Barley_break
             //
         }
 
-        //public bool CheckWin()
-        //{
-        //    int count = 0;
-        //    //=======================================
-        //    for (int i = 0; i < gameField.GetLength(0); i++)
-        //    {
-        //        for (int j = 0; j < gameField.GetLength(1); j++)
-        //        {
-        //            numbers[count] = gameField[i,j];
-        //            count++;
-        //        }
-        //    }
-
-        //    count = 0;
-        //    for (int i = 0; i < numbers.Length; i++)
-        //    {
-        //        for (int j = 0; j < numbers.Length - 1; j++)
-        //        {
-        //            if (numbers[j+1] < numbers[j])
-        //            {
-        //                return false;
-        //            }
-        //            else
-        //            {
-        //                if (j == numbers[numbers.Length-1])
-        //                {
-                            
-        //                }
-        //            }
-        //        }
-        //    }
-        //    if (count == 1)
-        //    {
-        //        return true;
-        //    }
-        //    else
-        //        return false;
+        public bool CheckWin()
+        {
+            int count = 0;
             //=======================================
+            for (int i = 0; i < gameField.GetLength(0); i++)
+            {
+                for (int j = 0; j < gameField.GetLength(1); j++)
+                {
+                    numbers[count] = gameField[i, j];
+                    count++;
+                }
+            }
+
+            count = 0;
+            for (int i = 0; i < numbers.Length; i++)
+            {
+                for (int j = 0; j < numbers.Length; j++)
+                {
+                    if ((i == numbers.Length - 1) || (j == numbers.Length - 1))
+                    {
+                    }
+                    else
+                    {
+                        if (j > i)
+                        {
+                            if (numbers[i] > numbers[j])
+                            {
+                                count++;
+                            }
+                        }
+                    }
+                }
+            }
+            if (count < 1)
+            {
+                Console.WriteLine("Вы выйграли!!!");
+                return true;
+            }
+            else
+                return false;
+            //==================================
         }
     }
 }
