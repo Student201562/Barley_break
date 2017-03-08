@@ -11,64 +11,39 @@ namespace Barley_break
     internal class Game
     {
         private int[] numbers;
-        private int[,] gameField;
+        private readonly int[,] gameField;
         private int moveValueX, moveValueY;
 
 
-        public Game(params int[] valueForPlay)
+        public Game(int valueForPlay)
         {
-            this.numbers = valueForPlay;
-            CheckValue();
-            CalculationSizeOfPlayField();
+            this.gameField = new int[valueForPlay,valueForPlay];
+            FullMassiveNumbers();
         }
-
-        private void CheckValue()
+        private void FullMassiveNumbers()
         {
-            for (int i = 0; i < numbers.Length; i++)
-            {
-                for (int j = numbers.Length - 1; j > 0; j--)
-                {
-                    if ((numbers[i] == numbers[j]) && (i != j))
-                    {
-                        throw new Exception("Некорректные данные");
-                    }
-                }
-            }
-        }
-        private void CalculationSizeOfPlayField()
-        {
-            int size = (int) Math.Sqrt(numbers.Length);
+            numbers = new int[gameField.Length]; 
             int count = 0;
-            //========================================
-            if (size == Math.Sqrt(numbers.Length))
+            for (int i = 0; i < gameField.GetLength(0); i++)
             {
-                gameField = new int[size, size];
-
-                for (int i = 0; i < gameField.GetLength(0); i++)
+                for (int j = 0; j < gameField.GetLength(1); j++)
                 {
-                    for (int j = 0; j < gameField.GetLength(1); j++)
+                    if ((gameField.Length - 1) == count)
                     {
-                        gameField[i, j] = numbers[count];
-                        if (gameField[i, j] >= 0)
-                        {
-                            
-                        }
-                        else
-                        {
-                            throw new Exception("Есть отрицательные значения, поменяйте их");
-                        }
-                        gameField[i, j] = numbers[count];
+                        gameField[i, j] = 0;
+                        numbers[count] = 0;
+                    }
+                    else
+                    {
+                        gameField[i, j] = count + 1;
+                        numbers[count] = count + 1;
                         count++;
                     }
                 }
             }
-            else
-            {
-                throw new Exception("Некорректные данные");
-            }
-            //========================================
+            Print.PrintData(gameField);
         }
-        public void GenerationNumbersOnField(Random gen)
+        public  void GenerationNumbersOnField(Random gen)
         {
             //int temp = gameField[3, 3];
             //gameField[3, 3] = gameField[3, 2];
@@ -93,24 +68,10 @@ namespace Barley_break
                     numbers[index] = Int32.MaxValue;
                 }
             }
-            Print();
+            //Print.PrintData(gameField);
             //========================
         }
-        public void Print()
-        {
-            Console.CursorTop = 3;
-
-             for (int i = 0; i < gameField.GetLength(0); i++)
-            {
-                Console.Write("\t\t\t");
-                for (int j = 0; j < gameField.GetLength(1); j++)
-                { 
-                    Console.Write(gameField[i, j] + "\t");
-                }
-                Console.WriteLine();
-            }
-        }
-        public void GetLocation(int moveValue)
+        public  void GetLocation(int moveValue)
         {
             moveValueX = 0;
             moveValueY = 0;
@@ -129,7 +90,7 @@ namespace Barley_break
             }
             //=========================================
         }
-        public void Shift(int valueWhichEnterUser)
+        public  void Shift(int valueWhichEnterUser)
         {
             int coordinateZeroX = 0;
             int coordinateZeroY = 0;
@@ -144,6 +105,7 @@ namespace Barley_break
                     {
                         coordinateZeroX = i;
                         coordinateZeroY = j;
+                        Print.PrintData(gameField);
                         break;
                     }
                 }
@@ -154,18 +116,21 @@ namespace Barley_break
                 temp[0, 0] = gameField[moveValueX, moveValueY];
                 gameField[moveValueX, moveValueY] = gameField[coordinateZeroX, coordinateZeroY];
                 gameField[coordinateZeroX, coordinateZeroY] = temp[0, 0];
+                Console.Beep();
             }
             if (Math.Abs(moveValueY - coordinateZeroY) == 1 && moveValueX == coordinateZeroX)
             {
                 temp[0, 0] = gameField[moveValueX, moveValueY];
                 gameField[moveValueX, moveValueY] = gameField[coordinateZeroX, coordinateZeroY];
                 gameField[coordinateZeroX, coordinateZeroY] = temp[0, 0];
+                Console.Beep();
             }
             //
         }
 
-        public bool CheckWin()
+        public  bool CheckWin()
         {
+            Print.PrintData(gameField);
             int count = 0;
             //=======================================
             for (int i = 0; i < gameField.GetLength(0); i++)
@@ -208,3 +173,52 @@ namespace Barley_break
         }
     }
 }
+// нужен когда game() передают игровое поле
+//private void CheckValue()
+//{
+//    for (int i = 0; i < numbers.Length; i++)
+//    {
+//        for (int j = numbers.Length - 1; j > 0; j--)
+//        {
+//            if ((numbers[i] == numbers[j]) && (i != j))
+//            {
+//                throw new Exception("Некорректные данные");
+//            }
+//        }
+//    }
+//}
+//private void CalculationSizeOfPlayField()
+//{
+
+//    int size = gameField.GetLength(0);
+//    int count = 0;
+//    //========================================
+//    if ( size > 0 )
+//    {
+//       // gameField = new int[size, size];
+
+//        for (int i = 0; i < gameField.GetLength(0); i++)
+//        {
+//            for (int j = 0; j < gameField.GetLength(1); j++)
+//            {
+//                gameField[i, j] = numbers[count];
+//                if (gameField[i, j] >= 0)
+//                {
+
+//                }
+//                else
+//                {
+//                    throw new Exception("Есть отрицательные значения, поменяйте их");
+//                }
+//                gameField[i, j] = numbers[count];
+//                count++;
+//            }
+//        }
+//    }
+//    else
+//    {
+//        throw new Exception("Некорректные данные");
+//    }
+//    Print.PrintData(gameField);
+//    //========================================
+//}
