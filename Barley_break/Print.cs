@@ -10,6 +10,7 @@ namespace Barley_break
     {
         public static void PrintData(int[,] gameField)
         {
+            Console.Clear();
             Console.CursorTop = 3;
 
             for (int i = 0; i < gameField.GetLength(0); i++)
@@ -20,15 +21,33 @@ namespace Barley_break
                     if (gameField[i, j] == 0)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write(gameField[i, j] + "\t");
+                        Console.ForegroundColor = ConsoleColor.Blue;
                     }
                     else
                     {
                         Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.Write(gameField[i, j] + "\t");
                     }
-                    Console.Write(gameField[i, j] + "\t");
                 }
                 Console.WriteLine();
             }
+        }
+        public static void PrintWin()
+        {
+            Console.WriteLine("\t\t\tВы выйграли!!!");
+        }
+        public static void PrintNumber()
+        {
+            Console.Write("\t\tВведите число которое хотите поменять = ");    
+        }
+        public static void PrintStartGame()
+        {
+            Console.Write("\t\tПодождите пока поле перемешается");    
+        }
+        public static void PrintError()
+        {
+            Console.WriteLine("\t\t\tОшибка!!!");    
         }
     }
 }
