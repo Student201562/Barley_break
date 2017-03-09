@@ -5,74 +5,68 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace Barley_break
 {
     internal class Game
     {
         private int[] numbers;
-        private int[,] gameField;
+        private readonly int[,] gameField;
         private int moveValueX, moveValueY;
+        private int coordinateZeroX, coordinateZeroY;
 
-
-        public Game(params int[] valueForPlay)
+        public Game(int valueForPlay)
         {
-            this.numbers = valueForPlay;
-            CheckValue();
-            CalculationSizeOfPlayField();
+            this.gameField = new int[valueForPlay, valueForPlay];
+            FullMassiveNumbers();
+            Shift();
         }
-
-        private void CheckValue()
+        public Game(string file)
         {
-            for (int i = 0; i < numbers.Length; i++)
+            string FileSeparator = File.ReadAllText(file, Encoding.GetEncoding(1251));
+            string[] mas = FileSeparator.Split(new char[] { ' ', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+            if (CheckStringINMassive(mas) == true)
             {
-                for (int j = numbers.Length - 1; j > 0; j--)
-                {
-                    if ((numbers[i] == numbers[j]) && (i != j))
-                    {
-                        throw new Exception("Некорректные данные");
-                    }
-                }
+                gameField = new int[(int)Math.Sqrt(mas.Length), (int)Math.Sqrt(mas.Length)];
+                numbers = new int[mas.Length];
+                MethodWhichForemedMassiv(mas);
+                Shift();
             }
         }
-        private void CalculationSizeOfPlayField()
+        private void FullMassiveNumbers()
         {
-            int size = (int) Math.Sqrt(numbers.Length);
+            Random gen = new Random();
+            numbers = new int[gameField.Length];
             int count = 0;
-            //========================================
-            if (size == Math.Sqrt(numbers.Length))
+            for (int i = 0; i < gameField.GetLength(0); i++)
             {
-                gameField = new int[size, size];
-
-                for (int i = 0; i < gameField.GetLength(0); i++)
+                for (int j = 0; j < gameField.GetLength(1); j++)
                 {
-                    for (int j = 0; j < gameField.GetLength(1); j++)
+                    if ((gameField.Length - 1) == count)
                     {
-                        gameField[i, j] = numbers[count];
-                        if (gameField[i, j] >= 0)
-                        {
-                            
-                        }
-                        else
-                        {
-                            throw new Exception("Есть отрицательные значения, поменяйте их");
-                        }
-                        gameField[i, j] = numbers[count];
+                        gameField[i, j] = 0;
+                        numbers[count] = 0;
+                    }
+                    else
+                    {
+                        gameField[i, j] = count + 1;
+                        numbers[count] = count + 1;
                         count++;
                     }
                 }
             }
-            else
-            {
-                throw new Exception("Некорректные данные");
-            }
-            //========================================
+            Print.PrintData(gameField);
+            System.Threading.Thread.Sleep(3000);
+            GenerationNumbersOnField(gen);
+            Print.PrintStartGame();
+            Print.PrintData(gameField);
         }
         public void GenerationNumbersOnField(Random gen)
         {
-            //int temp = gameField[3, 3];
-            //gameField[3, 3] = gameField[3, 2];
-            //gameField[3, 2] = temp;
+            //int temp = gameField[gameField.GetLength(0) -1, gameField.GetLength(1) - 1];
+            //gameField[gameField.GetLength(0) - 1, gameField.GetLength(1) - 1] = gameField[gameField.GetLength(0) - 1, gameField.GetLength(1) - 2];
+            //gameField[gameField.GetLength(0) - 1, gameField.GetLength(1) - 2] = temp;
 
             int index = 0;
             int helpIndex = 0;
@@ -93,27 +87,15 @@ namespace Barley_break
                     numbers[index] = Int32.MaxValue;
                 }
             }
-            Print();
+            Print.PrintData(gameField);
             //========================
         }
-        public void Print()
-        {
-            Console.CursorTop = 3;
-
-             for (int i = 0; i < gameField.GetLength(0); i++)
-            {
-                Console.Write("\t\t\t");
-                for (int j = 0; j < gameField.GetLength(1); j++)
-                { 
-                    Console.Write(gameField[i, j] + "\t");
-                }
-                Console.WriteLine();
-            }
-        }
-        public void GetLocation(int moveValue)
+        private void GetLocation(int moveValue)
         {
             moveValueX = 0;
             moveValueY = 0;
+            coordinateZeroX = 0;
+            coordinateZeroY = 0;
             //=========================================
             for (int i = 0; i < gameField.GetLength(0); i++)
             {
@@ -123,49 +105,72 @@ namespace Barley_break
                     {
                         moveValueX = i;
                         moveValueY = j;
-                        break;
+                    }
+                    if (gameField[i, j] == 0)
+                    {
+                        coordinateZeroX = i;
+                        coordinateZeroY = j;
                     }
                 }
             }
             //=========================================
         }
-        public void Shift(int valueWhichEnterUser)
+        private void Shift()
         {
-            int coordinateZeroX = 0;
-            int coordinateZeroY = 0;
-            int[,] temp = new int[1, 1];
+            int moveValue;
+            int temp = 0;
 
-            for (int i = 0; i < gameField.GetLength(0); i++)
+            Print.PrintData(gameField);
+            do
             {
-                for (int j = 0; j < gameField.GetLength(1); j++)
+                try
                 {
-                    // нахождение координат нуля
-                    if (gameField[i, j] == 0)
-                    {
-                        coordinateZeroX = i;
-                        coordinateZeroY = j;
-                        break;
-                    }
+                    Print.PrintNumber();
+                    moveValue = Convert.ToInt32(Console.ReadLine());
                 }
-            }
-            // перемещение
-            if (Math.Abs(moveValueX - coordinateZeroX) == 1 && moveValueY == coordinateZeroY)
-            {
-                temp[0, 0] = gameField[moveValueX, moveValueY];
-                gameField[moveValueX, moveValueY] = gameField[coordinateZeroX, coordinateZeroY];
-                gameField[coordinateZeroX, coordinateZeroY] = temp[0, 0];
-            }
-            if (Math.Abs(moveValueY - coordinateZeroY) == 1 && moveValueX == coordinateZeroX)
-            {
-                temp[0, 0] = gameField[moveValueX, moveValueY];
-                gameField[moveValueX, moveValueY] = gameField[coordinateZeroX, coordinateZeroY];
-                gameField[coordinateZeroX, coordinateZeroY] = temp[0, 0];
-            }
-            //
-        }
+                catch (Exception)
+                {
+                    moveValue = Convert.ToInt32(Console.ReadLine());
+                }
+                GetLocation(moveValue);
+            } while (CheckMoveValue(moveValue) != true);
+            // Перемещение
+            temp = gameField[moveValueX, moveValueY];
+            gameField[moveValueX, moveValueY] = gameField[coordinateZeroX, coordinateZeroY];
+            gameField[coordinateZeroX, coordinateZeroY] = temp;
+            Console.Beep();
 
-        public bool CheckWin()
+            if (CheckWin() == true)
+            {
+                Print.PrintWin();
+            }
+            else
+            {
+                Print.PrintData(gameField);
+                Shift();
+            }
+        }
+        private bool CheckMoveValue(int moveValue)
         {
+            int count = 0;
+
+            if (Math.Sqrt(Math.Pow(moveValueX - coordinateZeroX, 2) + Math.Pow(moveValueY - coordinateZeroY, 2)) == 1)
+            {
+                count++;
+            }
+            if (count > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+        private bool CheckWin()
+        {
+            Print.PrintData(gameField);
             int count = 0;
             //=======================================
             for (int i = 0; i < gameField.GetLength(0); i++)
@@ -182,29 +187,152 @@ namespace Barley_break
             {
                 for (int j = 0; j < numbers.Length; j++)
                 {
-                    if ((i == numbers.Length - 1) || (j == numbers.Length - 1))
+                    if (numbers[numbers.Length - 1] == 0)
                     {
+                        if ((i == numbers.Length - 1) || (j == numbers.Length - 1))
+                        {
+                        }
+                        else
+                        {
+                            if (j > i)
+                            {
+                                if (numbers[i] > numbers[j])
+                                {
+                                    count++;
+                                }
+                            }
+                        }
                     }
                     else
                     {
-                        if (j > i)
-                        {
-                            if (numbers[i] > numbers[j])
-                            {
-                                count++;
-                            }
-                        }
+                        count++;
                     }
                 }
             }
             if (count < 1)
             {
-                Console.WriteLine("Вы выйграли!!!");
                 return true;
             }
             else
                 return false;
             //==================================
         }
+        private bool CheckStringINMassive(string[] masStr)
+        {
+            string[] letters = new[]
+            {
+                "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U",
+                "V", "W", "X", "Y", "Z",
+                "А", "Б", "В", "Г", "Д", "Е", "Ё", "Ж", "З", "И", "Й", "К", "Л", "М", "Н", "О", "П", "Р", "С", "Т", "У",
+                "Ф", "Ц", "Ч", "Ш", "Щ", "Ъ", "Ы", "Ь", "Э", "Ю", "Я",
+                "!","@","$","%","^","&","*","(",")","-","_","+","=","{","}","[","]","/",@"\","|","?","№"
+            };
+
+            int count = 0;
+            for (int i = 0; i < masStr.Length; i++)
+            {
+                for (int j = 0; j < letters.Length; j++)
+                {
+                    if (masStr[i].Contains(letters[j]) == true)
+                    {
+                        count++;
+                    }
+
+                    if (masStr[i].Contains(letters[j].ToLower()) == true)
+                    {
+                        count++;
+                    }
+                }
+            }
+
+            if (count > 0)
+            {
+                Print.PrintError();
+                throw new Exception("Ошибка!!!");
+                return false;
+            }
+            else
+            {
+                if (CheckIntegerInMassive(masStr) == true)
+                {
+                    return true;
+                }
+                else
+                {
+                    Print.PrintError();
+                    throw new Exception("Ошибка!!!");
+                    return false;
+                }
+            }
+        }
+        private bool CheckIntegerInMassive(string[] masStr)
+        {
+            int count = 0;
+            for (int i = 0; i < masStr.Length; i++)
+            {
+                for (int j = 0; j < masStr.Length; j++)
+                {
+                    if (Int32.Parse(masStr[j]) == i)
+                    {
+                        count++;
+                        break;
+                    }
+                }
+            }
+            if ((count == masStr.Length))
+            {
+                if (CheckDemensionMassive(masStr) == true)
+                {
+                    return true;
+                }
+                else
+                {
+                    Print.PrintError();
+                    throw new Exception("Ошибка!!!");
+                    return false;
+                }
+            }
+            else
+            {
+                Print.PrintError();
+                throw new Exception("Ошибка!!!");
+                return false;
+            }
+        }
+        private bool CheckDemensionMassive(string[] masStr)
+        {
+            int size = (int)Math.Sqrt(masStr.Length);
+            int count = 0;
+
+            if (Math.Sqrt(masStr.Length) == size)
+            {
+                count++;
+            }
+            //=====================
+            if (count > 0)
+            {
+                return true;
+            }
+            else
+            {
+                Print.PrintError();
+                throw new Exception("Ошибка!!!");
+                return false;
+            }
+        }
+        private void MethodWhichForemedMassiv(string[] masStr)
+        {
+
+            int helper = 0;
+            for (int i = 0; i < Math.Sqrt(masStr.Length); i++)
+            {
+                for (int j = 0; j < Math.Sqrt(masStr.Length); j++)
+                {
+                    gameField[i, j] = Int32.Parse(masStr[helper]);
+                    helper++;
+                }
+            }
+        }
+
     }
 }
