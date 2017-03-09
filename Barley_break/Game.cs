@@ -12,7 +12,7 @@ namespace Barley_break
     public class Game
     {
         private int[] numbers;
-        private readonly int[,] gameField;
+        private int[,] gameField;
         private int moveValueX, moveValueY;
         private int coordinateZeroX, coordinateZeroY;
         // Конструктор, который работает с цифрами
@@ -343,6 +343,6 @@ namespace Barley_break
                 }
             }
         }
-
+        
     }
 }

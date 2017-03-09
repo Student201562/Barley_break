@@ -15,20 +15,25 @@ namespace Barley_break
             //sp.Stream = MusicIndia.DiscordToday;
             //sp.PlayLooping();
             //sp.Play();
-            //=========================
-            Print.PrintNumberWhichEnterUser();
+            //========================
             int numEnterUser = 0;
-            int.TryParse(Console.ReadLine(), out numEnterUser);
+            do
+            {
+                Print.PrintNumberWhichEnterUser();
+                int.TryParse(Console.ReadLine(), out numEnterUser);
                 if (numEnterUser > 1)
                 {
-                    Game game = new Game(numEnterUser); //("C:\\Users\\Kiril\\OneDrive\\Документы\\Visual Studio 2015\\Projects\\Barley_break\\txt.txt"
-                }
-            else
+                    Game game = new Game(numEnterUser);
+                    //("C:\\Users\\Kiril\\OneDrive\\Документы\\Visual Studio 2015\\Projects\\Barley_break\\txt.txt")
+                 }
+                else
                 {
                     Print.PrintError();
-                    throw new Exception("Число не соответствует игровому полю");
+                    //
+                    //throw new Exception("Число не соответствует игровому полю");
                 }
-            //=========================
+            } while (numEnterUser <= 1);
+            //========================
             //sp.Stop();
             Console.ReadKey();
         }
