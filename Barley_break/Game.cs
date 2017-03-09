@@ -15,13 +15,14 @@ namespace Barley_break
         private readonly int[,] gameField;
         private int moveValueX, moveValueY;
         private int coordinateZeroX, coordinateZeroY;
-
+        // Конструктор, который работает с цифрами
         public Game(int valueForPlay)
         {
             this.gameField = new int[valueForPlay, valueForPlay];
             FullMassiveNumbers();
             Shift();
         }
+        // Конструктор, который работает с файлом
         public Game(string file)
         {
             string FileSeparator = File.ReadAllText(file, Encoding.GetEncoding(1251));
@@ -34,9 +35,9 @@ namespace Barley_break
                 Shift();
             }
         }
+        // Заполнение вспомогательного массива Numbers
         private void FullMassiveNumbers()
         {
-            Random gen = new Random();
             numbers = new int[gameField.Length];
             int count = 0;
             for (int i = 0; i < gameField.GetLength(0); i++)
@@ -56,20 +57,21 @@ namespace Barley_break
                     }
                 }
             }
-            Print.PrintData(gameField);
+            Print.PrintGameField(gameField);
             System.Threading.Thread.Sleep(3000);
-            GenerationNumbersOnField(gen);
+            GenerationNumbersOnField();
             Print.PrintStartGame();
-            Print.PrintData(gameField);
+            Print.PrintGameField(gameField);
         }
-        public void GenerationNumbersOnField(Random gen)
+        // Генерация игрового поля
+        public void GenerationNumbersOnField()
         {
+            Random gen = new Random();
             //int temp = gameField[gameField.GetLength(0) -1, gameField.GetLength(1) - 1];
             //gameField[gameField.GetLength(0) - 1, gameField.GetLength(1) - 1] = gameField[gameField.GetLength(0) - 1, gameField.GetLength(1) - 2];
             //gameField[gameField.GetLength(0) - 1, gameField.GetLength(1) - 2] = temp;
 
             int index = 0;
-            int helpIndex = 0;
             //========================
             for (int i = 0; i < gameField.GetLength(0); i++)
             {
@@ -87,9 +89,10 @@ namespace Barley_break
                     numbers[index] = Int32.MaxValue;
                 }
             }
-            Print.PrintData(gameField);
+            Print.PrintGameField(gameField);
             //========================
         }
+        // Метод, который находит координаты
         private void GetLocation(int moveValue)
         {
             moveValueX = 0;
@@ -115,17 +118,18 @@ namespace Barley_break
             }
             //=========================================
         }
+        // Метод, который отвечает за перемещение
         private void Shift()
         {
             int moveValue;
             int temp = 0;
 
-            Print.PrintData(gameField);
+            Print.PrintGameField(gameField);
             do
             {
                 try
                 {
-                    Print.PrintNumber();
+                    Print.PrintEnterNumber();
                     moveValue = Convert.ToInt32(Console.ReadLine());
                 }
                 catch (Exception)
@@ -146,10 +150,11 @@ namespace Barley_break
             }
             else
             {
-                Print.PrintData(gameField);
+                Print.PrintGameField(gameField);
                 Shift();
             }
         }
+        // Метод, который проверяет на возможность перемещения
         private bool CheckMoveValue(int moveValue)
         {
             int count = 0;
@@ -168,9 +173,10 @@ namespace Barley_break
             }
 
         }
+        // Метод, который проверяет выйграл ли пользователь
         private bool CheckWin()
         {
-            Print.PrintData(gameField);
+            Print.PrintGameField(gameField);
             int count = 0;
             //=======================================
             for (int i = 0; i < gameField.GetLength(0); i++)
@@ -217,6 +223,7 @@ namespace Barley_break
                 return false;
             //==================================
         }
+        // Метод, который проверяет массив строк на буквы и знаки
         private bool CheckStringINMassive(string[] masStr)
         {
             string[] letters = new[]
@@ -265,6 +272,7 @@ namespace Barley_break
                 }
             }
         }
+        // Метод, который проверяет на весь ли массив заполнен цифрами
         private bool CheckIntegerInMassive(string[] masStr)
         {
             int count = 0;
@@ -299,6 +307,7 @@ namespace Barley_break
                 return false;
             }
         }
+        // Метод, который проверяет адекватность размерности 
         private bool CheckDemensionMassive(string[] masStr)
         {
             int size = (int)Math.Sqrt(masStr.Length);
@@ -320,6 +329,7 @@ namespace Barley_break
                 return false;
             }
         }
+        // Метод, который заполняет массив
         private void MethodWhichForemedMassiv(string[] masStr)
         {
 

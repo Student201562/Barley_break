@@ -11,14 +11,14 @@ namespace Barley_break
     {
         static void Main(string[] args)
         {
-            System.Media.SoundPlayer sp = new System.Media.SoundPlayer();
-            sp.Stream = MusicIndia.DiscordToday;
-            sp.PlayLooping();
-            sp.Play();
+            //System.Media.SoundPlayer sp = new System.Media.SoundPlayer();
+            //sp.Stream = MusicIndia.DiscordToday;
+            //sp.PlayLooping();
+            //sp.Play();
             //=========================
-            Game game = new Game(5);    //("C:\\Users\\Kiril\\OneDrive\\Документы\\Visual Studio 2015\\Projects\\Barley_break\\txt.txt"
+            Game game = new Game(3);    //("C:\\Users\\Kiril\\OneDrive\\Документы\\Visual Studio 2015\\Projects\\Barley_break\\txt.txt"
             //=========================
-            sp.Stop();
+            //sp.Stop();
             Console.ReadKey();
         }
     }

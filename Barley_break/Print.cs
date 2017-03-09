@@ -8,7 +8,8 @@ namespace Barley_break
 {
     internal class Print
     {
-        public static void PrintData(int[,] gameField)
+        // Вывод игрового поля
+        public static void PrintGameField(int[,] gameField)
         {
             Console.Clear();
             Console.CursorTop = 3;
@@ -33,11 +34,13 @@ namespace Barley_break
                 Console.WriteLine();
             }
         }
+        // Вывод, что вы выйграли
         public static void PrintWin()
         {
             Console.WriteLine("\t\t\tВы выйграли!!!");
         }
-        public static void PrintNumber()
+        // Информация для пользователя
+        public static void PrintEnterNumber()
         {
             Console.Write("\t\tВведите число которое хотите поменять = ");
         }
