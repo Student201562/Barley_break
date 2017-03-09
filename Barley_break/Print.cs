@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Barley_break
 {
-    internal class Print
+    public class Print
     {
         // Вывод игрового поля
         public static void PrintGameField(int[,] gameField)
@@ -38,6 +38,10 @@ namespace Barley_break
         public static void PrintWin()
         {
             Console.WriteLine("\t\t\tВы выйграли!!!");
+        }
+        public static void PrintNumberWhichEnterUser()
+        {
+            Console.Write("Введите размерность поля = ");
         }
         // Информация для пользователя
         public static void PrintEnterNumber()

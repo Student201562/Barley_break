@@ -9,7 +9,7 @@ using System.IO;
 
 namespace Barley_break
 {
-    internal class Game
+    public class Game
     {
         private int[] numbers;
         private readonly int[,] gameField;
@@ -58,7 +58,7 @@ namespace Barley_break
                 }
             }
             Print.PrintGameField(gameField);
-            System.Threading.Thread.Sleep(3000);
+            System.Threading.Thread.Sleep(2000);
             GenerationNumbersOnField();
             Print.PrintStartGame();
             Print.PrintGameField(gameField);

@@ -16,7 +16,18 @@ namespace Barley_break
             //sp.PlayLooping();
             //sp.Play();
             //=========================
-            Game game = new Game(3);    //("C:\\Users\\Kiril\\OneDrive\\Документы\\Visual Studio 2015\\Projects\\Barley_break\\txt.txt"
+            Print.PrintNumberWhichEnterUser();
+            int numEnterUser = 0;
+            int.TryParse(Console.ReadLine(), out numEnterUser);
+                if (numEnterUser > 1)
+                {
+                    Game game = new Game(numEnterUser); //("C:\\Users\\Kiril\\OneDrive\\Документы\\Visual Studio 2015\\Projects\\Barley_break\\txt.txt"
+                }
+            else
+                {
+                    Print.PrintError();
+                    throw new Exception("Число не соответствует игровому полю");
+                }
             //=========================
             //sp.Stop();
             Console.ReadKey();
