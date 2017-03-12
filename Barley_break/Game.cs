@@ -2,6 +2,7 @@
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,6 @@ namespace Barley_break
 {
     public class Game
     {
-        private int[] numbers;
         private int[,] gameField;
         private int moveValueX, moveValueY;
         private int coordinateZeroX, coordinateZeroY;
@@ -19,7 +19,7 @@ namespace Barley_break
         public Game(int valueForPlay)
         {
             this.gameField = new int[valueForPlay, valueForPlay];
-            FullMassiveNumbers();
+            FullMassive();
             Shift();
         }
         // Конструктор, который работает с файлом
@@ -30,29 +30,25 @@ namespace Barley_break
             if (CheckStringINMassive(mas) == true)
             {
                 gameField = new int[(int)Math.Sqrt(mas.Length), (int)Math.Sqrt(mas.Length)];
-                numbers = new int[mas.Length];
                 MethodWhichForemedMassiv(mas);
                 Shift();
             }
         }
         // Заполнение вспомогательного массива Numbers
-        private void FullMassiveNumbers()
+        private void FullMassive()
         {
-            numbers = new int[gameField.Length];
-            int count = 0;
+            int count = 1;
             for (int i = 0; i < gameField.GetLength(0); i++)
             {
                 for (int j = 0; j < gameField.GetLength(1); j++)
                 {
-                    if ((gameField.Length - 1) == count)
+                    if ((i == gameField.GetLength(0) - 1) && (j == gameField.GetLength(1) - 1))
                     {
                         gameField[i, j] = 0;
-                        numbers[count] = 0;
                     }
                     else
                     {
-                        gameField[i, j] = count + 1;
-                        numbers[count] = count + 1;
+                        gameField[i, j] = count;
                         count++;
                     }
                 }
@@ -67,7 +63,8 @@ namespace Barley_break
         public void GenerationNumbersOnField()
         {
             Random gen = new Random();
-            //int temp = gameField[gameField.GetLength(0) -1, gameField.GetLength(1) - 1];
+            int temp = 0;
+            //int temp = gameField[gameField.GetLength(0) - 1, gameField.GetLength(1) - 1];
             //gameField[gameField.GetLength(0) - 1, gameField.GetLength(1) - 1] = gameField[gameField.GetLength(0) - 1, gameField.GetLength(1) - 2];
             //gameField[gameField.GetLength(0) - 1, gameField.GetLength(1) - 2] = temp;
 
@@ -77,16 +74,11 @@ namespace Barley_break
             {
                 for (int j = 0; j < gameField.GetLength(1); j++)
                 {
-                    index = gen.Next(0, numbers.Length);
-                    for (int k = 0; k < numbers.Length; k++)
-                    {
-                        while ((numbers[index] == numbers[k]) && (numbers[index] == Int32.MaxValue))
-                        {
-                            index = gen.Next(0, numbers.Length);
-                        }
-                    }
-                    gameField[i, j] = numbers[index];
-                    numbers[index] = Int32.MaxValue;
+                    int x = gen.Next(0, gameField.GetLength(0));
+                    int y = gen.Next(0, gameField.GetLength(1));
+                    temp = gameField[x, y];
+                    gameField[x, y] = gameField[i, j];
+                    gameField[i, j] = temp;
                 }
             }
             Print.PrintGameField(gameField);
@@ -176,18 +168,18 @@ namespace Barley_break
         // Метод, который проверяет выйграл ли пользователь
         private bool CheckWin()
         {
+            int[] numbers = new int[gameField.Length];
             Print.PrintGameField(gameField);
             int count = 0;
             //=======================================
             for (int i = 0; i < gameField.GetLength(0); i++)
             {
-                for (int j = 0; j < gameField.GetLength(1); j++)
+                for(int j = 0; j < gameField.GetLength(1); j++)
                 {
                     numbers[count] = gameField[i, j];
                     count++;
                 }
             }
-
             count = 0;
             for (int i = 0; i < numbers.Length; i++)
             {
@@ -204,23 +196,18 @@ namespace Barley_break
                             {
                                 if (numbers[i] > numbers[j])
                                 {
-                                    count++;
+                                    return false;
                                 }
                             }
                         }
                     }
                     else
                     {
-                        count++;
+                        return false;
                     }
                 }
             }
-            if (count < 1)
-            {
-                return true;
-            }
-            else
-                return false;
+            return true;
             //==================================
         }
         // Метод, который проверяет массив строк на буквы и знаки
