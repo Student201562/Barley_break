@@ -25,8 +25,7 @@ namespace Barley_break
         // Конструктор, который работает с файлом
         public Game(string file)
         {
-            string FileSeparator = File.ReadAllText(file, Encoding.GetEncoding(1251));
-            string[] mas = FileSeparator.Split(new char[] { ' ', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] mas = FileReader.ReadForFile(file);
             if (FileReader.CheckStringINMassive(mas) == true)
             {
                 gameField = new int[(int)Math.Sqrt(mas.Length), (int)Math.Sqrt(mas.Length)];

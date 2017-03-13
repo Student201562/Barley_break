@@ -3,11 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.IO;
 namespace Barley_break
 {
     class FileReader
     {
+        public static string[] ReadForFile(string file)
+        {
+            string FileSeparator = File.ReadAllText(file, Encoding.GetEncoding(1251));
+            string[] mas = FileSeparator.Split(new char[] { ' ', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+
+            return mas;
+        }
         public static bool CheckStringINMassive(string[] masStr)
         {
             string[] letters = new[]
