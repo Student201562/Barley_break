@@ -25,7 +25,7 @@ namespace Barley_break
                     int.TryParse(Console.ReadLine(), out numEnterUser);
                     if (numEnterUser > 1)
                     {
-                        Game game = new Game(numEnterUser);
+                        Game game = new Game("C:\\Users\\student\\Source\\Repos\\Barley_break\\txt.txt");
                         //("C:\\Users\\Kiril\\OneDrive\\Документы\\Visual Studio 2015\\Projects\\Barley_break\\txt.txt")
                     }
                     else
