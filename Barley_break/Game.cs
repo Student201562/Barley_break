@@ -59,6 +59,10 @@ namespace Barley_break
             Print.PrintStartGame();
             Print.PrintGameField(gameField);
         }
+        public int this[int i, int j]
+        {
+            get { return gameField[i, j]; }
+        }
         // Генерация игрового поля
         public void GenerationNumbersOnField()
         {
