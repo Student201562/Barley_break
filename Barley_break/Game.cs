@@ -12,57 +12,80 @@ namespace Barley_break
 {
     public class Game
     {
-        private int[,] gameField;
-        private int moveValueX, moveValueY;
-        private int coordinateZeroX, coordinateZeroY;
+        public readonly int[,] gameField;
         // Конструктор, который работает с цифрами
-        public Game(int valueForPlay)
+        public Game(params int[] valueForPlay)
         {
-            this.gameField = new int[valueForPlay, valueForPlay];
-            FullMassive();
-            Shift();
-        }
-        // Конструктор, который работает с файлом
-        public Game(string file)
-        {
-            string[] mas = FileReader.ReadForFile(file);
-            if (FileReader.CheckStringINMassive(mas) == true)
+            if (IsExsistGameField(valueForPlay))
             {
-                gameField = new int[(int)Math.Sqrt(mas.Length), (int)Math.Sqrt(mas.Length)];
-                MethodWhichForemedMassiv(mas);
-                Shift();
-            }
-        }
-        // Заполнение вспомогательного массива Numbers
-        private void FullMassive()
-        {
-            int count = 1;
-            for (int i = 0; i < gameField.GetLength(0); i++)
-            {
-                for (int j = 0; j < gameField.GetLength(1); j++)
+                int size = (int) Math.Sqrt(valueForPlay.Length);
+                int temp = 0;
+
+                this.gameField = new int[size, size];
+                for (int i = 0; i < gameField.GetLength(0); i++)
                 {
-                    if ((i == gameField.GetLength(0) - 1) && (j == gameField.GetLength(1) - 1))
+                    for (int j = 0; j < gameField.GetLength(1); j++)
                     {
-                        gameField[i, j] = 0;
+                        gameField[i, j] = valueForPlay[temp];
+                        temp++;
                     }
-                    else
+                }
+                GenerationNumbersOnField();
+            }
+            else
+            {
+                throw new Exception();
+            }
+
+        }
+        //Заполнение вспомогательного массива Numbers
+        public static bool IsExsistGameField(int[] valueForPlay)
+        {
+            int count = 0;
+
+            if (Math.Sqrt(valueForPlay.Length) % 1 == 0)
+            {
+                count = 1;
+            }
+            //=====================
+            int zeroCount = 0;
+            for (int i = 0; i < valueForPlay.Length; i++)
+            {
+                if (valueForPlay[i] == 0)
+                {
+                    zeroCount ++;
+                }
+            }
+
+            for (int i = 0; i < valueForPlay.Length; i++)
+            {
+                for (int j = 0; j < valueForPlay.Length; j++)
+                {
+                    if (i < j)
                     {
-                        gameField[i, j] = count;
-                        count++;
+                        if (valueForPlay[i] == valueForPlay[j])
+                        {
+                            return false;
+                        }
                     }
                 }
             }
-            Print.PrintGameField(gameField);
-            System.Threading.Thread.Sleep(2000);
-            GenerationNumbersOnField();
-            Print.PrintStartGame();
-            Print.PrintGameField(gameField);
+
+            if ((count == 1) && (zeroCount == 1))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
+
         public int this[int i, int j]
         {
             get { return gameField[i, j]; }
         }
-        // Генерация игрового поля
+
         public void GenerationNumbersOnField()
         {
             Random gen = new Random();
@@ -84,95 +107,69 @@ namespace Barley_break
                     gameField[i, j] = temp;
                 }
             }
-            Print.PrintGameField(gameField);
             //========================
         }
         // Метод, который находит координаты
-        private void GetLocation(int moveValue)
+        private int[] GetLocation(int moveValue)
         {
-            moveValueX = 0;
-            moveValueY = 0;
-            coordinateZeroX = 0;
-            coordinateZeroY = 0;
-            //=========================================
+            int[] pointsXandY = new int[2];
+
             for (int i = 0; i < gameField.GetLength(0); i++)
             {
                 for (int j = 0; j < gameField.GetLength(1); j++)
                 {
-                    if (moveValue == gameField[i, j])
+                    if (gameField[i, j] == moveValue)
+                    {
+                        pointsXandY[0] = i;
+                        pointsXandY[1] = j;
+                    }
+                }
+            }
+            return pointsXandY;
+        }
+        // Метод, который отвечает за перемещение
+        public bool Shift(int moveValue)
+        {
+            int count = 0;
+            int temp = 0;
+            int moveValueX = 0, moveValueY = 0, coordinateZeroX = 0, coordinateZeroY = 0;
+
+            for (int i = 0; i < gameField.GetLength(0); i++)
+            {
+                for (int j = 0; j < gameField.GetLength(1); j++)
+                {
+                    if (gameField[i,j] == moveValue)
                     {
                         moveValueX = i;
                         moveValueY = j;
+                        count++;
                     }
-                    if (gameField[i, j] == 0)
+                    if (gameField[i,j] == 0)
                     {
                         coordinateZeroX = i;
                         coordinateZeroY = j;
+                        count++;
                     }
                 }
             }
-            //=========================================
-        }
-        // Метод, который отвечает за перемещение
-        private void Shift()
-        {
-            int moveValue;
-            int temp = 0;
 
-            Print.PrintGameField(gameField);
-            do
+            if ((count == 2) && (Math.Sqrt(Math.Pow(moveValueX - coordinateZeroX, 2) + Math.Pow(moveValueY - coordinateZeroY, 2)) == 1))
             {
-                try
-                {
-                    Print.PrintEnterNumber();
-                    moveValue = Convert.ToInt32(Console.ReadLine());
-                }
-                catch (Exception)
-                {
-                    moveValue = Convert.ToInt32(Console.ReadLine());
-                }
-                GetLocation(moveValue);
-            } while (CheckMoveValue(moveValue) != true);
-            // Перемещение
-            temp = gameField[moveValueX, moveValueY];
-            gameField[moveValueX, moveValueY] = gameField[coordinateZeroX, coordinateZeroY];
-            gameField[coordinateZeroX, coordinateZeroY] = temp;
-            Console.Beep();
-
-            if (CheckWin() == true)
-            {
-                Print.PrintWin();
-            }
-            else
-            {
-                Print.PrintGameField(gameField);
-                Shift();
-            }
-        }
-        // Метод, который проверяет на возможность перемещения
-        private bool CheckMoveValue(int moveValue)
-        {
-            int count = 0;
-
-            if (Math.Sqrt(Math.Pow(moveValueX - coordinateZeroX, 2) + Math.Pow(moveValueY - coordinateZeroY, 2)) == 1)
-            {
-                count++;
-            }
-            if (count > 0)
-            {
+                // Перемещение
+                temp = gameField[moveValueX, moveValueY];
+                gameField[moveValueX, moveValueY] = gameField[coordinateZeroX, coordinateZeroY];
+                gameField[coordinateZeroX, coordinateZeroY] = temp;
                 return true;
             }
             else
             {
                 return false;
             }
-
         }
         // Метод, который проверяет выйграл ли пользователь
-        private bool CheckWin()
+        public bool CheckWin()
         {
             int[] numbers = new int[gameField.Length];
-            Print.PrintGameField(gameField);
             int count = 0;
             //=======================================
             for (int i = 0; i < gameField.GetLength(0); i++)
@@ -214,19 +211,5 @@ namespace Barley_break
             //==================================
         }
         // Метод, который заполняет массив
-        private void MethodWhichForemedMassiv(string[] masStr)
-        {
-
-            int helper = 0;
-            for (int i = 0; i < Math.Sqrt(masStr.Length); i++)
-            {
-                for (int j = 0; j < Math.Sqrt(masStr.Length); j++)
-                {
-                    gameField[i, j] = Int32.Parse(masStr[helper]);
-                    helper++;
-                }
-            }
-        }
-        
     }
 }
