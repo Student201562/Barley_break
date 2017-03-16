@@ -12,12 +12,20 @@ namespace Barley_break
         static void Main(string[] args)
         {
             //int[] returnInt = FileReader.ReadFromFile("C:\\Users\\Kiril\\OneDrive\\Документы\\Visual Studio 2015\\Projects\\Barley_break\\txt.txt");
-            Game game = new Game(1, 2, 3, 4, 5,6,7,8,0);
-            Print.PrintGameField(game);
 
-            StartGame(game);
+            Console.Write("\tХотите ли вы сыграть? \n\t если да наберите Y \n\t если нет то любую клавишу = ");
+            while (Convert.ToString(Console.ReadLine()) == "Y")
+            {
+                Game game = new Game(1,2,3,4,5,6,7,0,8);
+                Console.Clear();
+                Print.PrintGameField(game);
 
-            Console.WriteLine("Вы выиграли!");
+                    StartGame(game);
+
+                //Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("Вы выиграли!");
+                Console.Write("Если вы хотите сыграть еще раз, намите Y = ");
+            }
 
             Console.ReadKey();
         }

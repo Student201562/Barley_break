@@ -20,14 +20,16 @@ namespace Barley_break
                 {
                     if (game[i, j] == 0)
                     {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write(game[i, j] + "\t");
+                        Console.Write("|");
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.Write(game[i, j]);
                         Console.ForegroundColor = ConsoleColor.White;
+                        Console.Write("|" +  "\t");
                     }
                     else
                     {
                         Console.ForegroundColor = ConsoleColor.White;
-                        Console.Write(game[i, j] + "\t");
+                        Console.Write( "|" + game[i, j] + "|" + "\t");
                     }
                 }
                 Console.WriteLine();
