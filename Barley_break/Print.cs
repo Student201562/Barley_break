@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Barley_break
 {
-    public class Print
+    public static class Print
     {
         // Вывод игрового поля
         public static void PrintGameField(Game game)
