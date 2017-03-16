@@ -11,24 +11,23 @@ namespace Barley_break
         // Вывод игрового поля
         public static void PrintGameField(Game game)
         {
-            Console.Clear();
-            Console.CursorTop = 3;
+            Console.CursorTop = 2;
 
-            for (int i = 0; i < game.gameField.GetLength(0); i++)
+            for (int i = 0; i < game.sizeField; i++)
             {
                 Console.Write("\t\t\t");
-                for (int j = 0; j < game.gameField.GetLength(1); j++)
+                for (int j = 0; j < game.sizeField; j++)
                 {
-                    if (game.gameField[i, j] == 0)
+                    if (game[i, j] == 0)
                     {
                         Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write(game.gameField[i, j] + "\t");
+                        Console.Write(game[i, j] + "\t");
                         Console.ForegroundColor = ConsoleColor.White;
                     }
                     else
                     {
                         Console.ForegroundColor = ConsoleColor.White;
-                        Console.Write(game.gameField[i, j] + "\t");
+                        Console.Write(game[i, j] + "\t");
                     }
                 }
                 Console.WriteLine();

@@ -12,16 +12,17 @@ namespace Barley_break
 {
     public class Game
     {
-        public readonly int[,] gameField;
+        private int[,] gameField;
+        public readonly int sizeField;
         // Конструктор, который работает с цифрами
         public Game(params int[] valueForPlay)
         {
             if (IsExsistGameField(valueForPlay))
             {
-                int size = (int) Math.Sqrt(valueForPlay.Length);
+                sizeField = (int) Math.Sqrt(valueForPlay.Length);
                 int temp = 0;
 
-                this.gameField = new int[size, size];
+                this.gameField = new int[sizeField, sizeField];
                 for (int i = 0; i < gameField.GetLength(0); i++)
                 {
                     for (int j = 0; j < gameField.GetLength(1); j++)
@@ -80,12 +81,10 @@ namespace Barley_break
                 return false;
             }
         }
-
         public int this[int i, int j]
         {
             get { return gameField[i, j]; }
         }
-
         public void GenerationNumbersOnField()
         {
             Random gen = new Random();
@@ -112,53 +111,36 @@ namespace Barley_break
         // Метод, который находит координаты
         private int[] GetLocation(int moveValue)
         {
-            int[] pointsXandY = new int[2];
-
             for (int i = 0; i < gameField.GetLength(0); i++)
             {
                 for (int j = 0; j < gameField.GetLength(1); j++)
                 {
                     if (gameField[i, j] == moveValue)
                     {
-                        pointsXandY[0] = i;
-                        pointsXandY[1] = j;
+                        return new[] {i, j};
                     }
                 }
             }
-            return pointsXandY;
+
+            return null;
         }
         // Метод, который отвечает за перемещение
         public bool Shift(int moveValue)
         {
             int count = 0;
             int temp = 0;
-            int moveValueX = 0, moveValueY = 0, coordinateZeroX = 0, coordinateZeroY = 0;
+            int[] massiveZero;
+            int[] massiveMoveValue;
 
-            for (int i = 0; i < gameField.GetLength(0); i++)
-            {
-                for (int j = 0; j < gameField.GetLength(1); j++)
-                {
-                    if (gameField[i,j] == moveValue)
-                    {
-                        moveValueX = i;
-                        moveValueY = j;
-                        count++;
-                    }
-                    if (gameField[i,j] == 0)
-                    {
-                        coordinateZeroX = i;
-                        coordinateZeroY = j;
-                        count++;
-                    }
-                }
-            }
+            massiveZero = GetLocation(0);
+            massiveMoveValue = GetLocation(moveValue);
 
-            if ((count == 2) && (Math.Sqrt(Math.Pow(moveValueX - coordinateZeroX, 2) + Math.Pow(moveValueY - coordinateZeroY, 2)) == 1))
+            if ((massiveMoveValue != null) && (Math.Sqrt(Math.Pow(massiveMoveValue[0] - massiveZero[0], 2) + Math.Pow(massiveMoveValue[1] - massiveZero[1], 2)) == 1))
             {
                 // Перемещение
-                temp = gameField[moveValueX, moveValueY];
-                gameField[moveValueX, moveValueY] = gameField[coordinateZeroX, coordinateZeroY];
-                gameField[coordinateZeroX, coordinateZeroY] = temp;
+                temp = gameField[massiveMoveValue[0], massiveMoveValue[1]];
+                gameField[massiveMoveValue[0], massiveMoveValue[1]] = gameField[massiveZero[0], massiveZero[1]];
+                gameField[massiveZero[0], massiveZero[1]] = temp;
                 return true;
             }
             else
@@ -210,6 +192,5 @@ namespace Barley_break
             return true;
             //==================================
         }
-        // Метод, который заполняет массив
     }
 }
